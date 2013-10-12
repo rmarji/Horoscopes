@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Daily Horoscopes</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_splash">ابراج يومية</string>
+    <string name="title_activity_main_menu">الرئيسية</string>
+    <string name="title_activity_pick_notif_time">اختر التوقيت</string>
+
+</resources>
