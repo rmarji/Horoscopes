@@ -65,7 +65,9 @@ public class Utils {
 		try {
 			httppost.setEntity(new UrlEncodedFormEntity(p, "UTF-8"));
 
-			httpclient.execute(httppost);
+			HttpResponse response = httpclient.execute(httppost);
+			Log.d("response",response.getAllHeaders().toString());
+			
 
 		} catch (ClientProtocolException e) {
 
@@ -180,7 +182,7 @@ public class Utils {
 
 		HttpGet httpGet = new HttpGet(
 				"http://twitter.com/statuses/user_timeline/vogella.json");
-
+		
 		try {
 			HttpResponse response = client.execute(httpGet);
 			StatusLine statusLine = response.getStatusLine();

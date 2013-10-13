@@ -7,5 +7,6 @@
     <string name="title_activity_splash">ابراج يومية</string>
     <string name="title_activity_main_menu">الرئيسية</string>
     <string name="title_activity_pick_notif_time">اختر التوقيت</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 
 </resources>

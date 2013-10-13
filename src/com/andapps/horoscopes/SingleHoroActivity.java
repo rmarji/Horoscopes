@@ -3,6 +3,7 @@ package com.andapps.horoscopes;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,7 @@ import com.andapps.horoscopes.model.Horoscope;
 import com.andapps.horoscopes.utilis.Ads;
 import com.andapps.horoscopes.utilis.Analytics;
 import com.andapps.horoscopes.utilis.JSONParser;
+import com.andapps.horoscopes.utilis.ScrapeRanking;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -154,7 +156,9 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			String url = URL + (hId + 1);
 			Log.d("URL", url);
 			JSONObject jsonObj = JSONParser.getJSONFromUrl(url);
+			ScrapeRanking.postToAGoogleDoc( new ArrayList<NameValuePair>());
 			return jsonObj;
+			
 		}
 
 		@Override
@@ -162,6 +166,9 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			super.onPostExecute(jsonObj);
 			// create the list to parse the json into
 			horoscopesObjs = new ArrayList<Horoscope>();
+			//TODO: activate this to start getting horoscopes
+			//ScrapeRanking.logRanking(getApplicationContext());
+			
 
 			try {
 				// get the array of objects

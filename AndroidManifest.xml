@@ -55,6 +55,11 @@
             android:name="com.andapps.horoscopes.utilis.Alarm"
             android:process=":remote" >
         </receiver>
+
+        <activity
+            android:name="com.andapps.horoscopes.FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,12 +1,22 @@
 package com.andapps.horoscopes;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -15,6 +25,7 @@ import com.andapps.horoscopes.model.Horoscope;
 import com.andapps.horoscopes.utilis.Analytics;
 import com.andapps.horoscopes.utilis.ImageAdapter;
 
+@SuppressLint("SetJavaScriptEnabled")
 public class MainMenuActivity extends Activity implements
 		OnMenuItemClickListener {
 
@@ -25,6 +36,50 @@ public class MainMenuActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_menu);
+
+		final Context myApp = this;
+
+		/*
+		 * An instance of this class will be registered as a JavaScript
+		 * interface
+		 */
+		class MyJavaScriptInterface {
+
+			@JavascriptInterface
+			public void showHTML(String html) {
+				
+				Document n = Jsoup.parse(html);
+				
+				new AlertDialog.Builder(myApp).setTitle("HTML")
+						.setMessage(n.text())
+						.setPositiveButton(android.R.string.ok, null)
+						.setCancelable(false).create().show();
+				Log.d("html", n.getElementsByClass("title").text());
+			}
+		}
+
+		final WebView browser = (WebView) findViewById(R.id.webView1);
+		/* JavaScript must be enabled if you want it to work, obviously */
+		browser.getSettings().setJavaScriptEnabled(true);
+
+		/* Register a new JavaScript interface called HTMLOUT */
+		browser.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
+
+		/* WebViewClient must be set BEFORE calling loadUrl! */
+		browser.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				/*
+				 * This call inject JavaScript into the page which just finished
+				 * loading.
+				 */
+				browser.loadUrl("javascript:window.HTMLOUT.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
+			}
+
+		});
+
+		/* load a web page */
+		browser.loadUrl("https://play.google.com/store/apps/collection/topselling_new_free");
 
 		GridView gv = (GridView) findViewById(R.id.gridView1);
 		ImageAdapter ne = new ImageAdapter(this, mThumbIds, names);
@@ -45,6 +100,10 @@ public class MainMenuActivity extends Activity implements
 			}
 		});
 	}
+
+	/*****/
+
+	/****/
 
 	@Override
 	protected void onStart() {
@@ -72,7 +131,8 @@ public class MainMenuActivity extends Activity implements
 
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
-		
+
 		return false;
 	}
+
 }

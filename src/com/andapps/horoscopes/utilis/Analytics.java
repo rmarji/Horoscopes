@@ -65,7 +65,7 @@ public class Analytics {
 	public static void appShared(int days) {
 		Map<String, String> convoParams = new HashMap<String, String>();
 		convoParams.put("Days_Until_Shared", Integer.toString(days));
-		FlurryAgent.logEvent("App_Shared");
+		FlurryAgent.logEvent("App_Shared" , convoParams);
 	}
 
 	/*
