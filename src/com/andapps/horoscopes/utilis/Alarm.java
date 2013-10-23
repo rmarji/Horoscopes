@@ -27,7 +27,7 @@ public class Alarm extends BroadcastReceiver {
 		Calendar nextTime = Calendar.getInstance();
 		// this is set the next alarm the same day today
 		nextTime.setTimeInMillis(System.currentTimeMillis()
-				+ AlarmManager.INTERVAL_DAY);
+				+ AlarmManager.INTERVAL_HOUR/60);
 		// nextTime.setTimeInMillis(System.currentTimeMillis()+
 		// AlarmManager.INTERVAL_HOUR/60/8);
 

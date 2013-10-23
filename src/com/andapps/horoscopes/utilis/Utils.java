@@ -82,23 +82,6 @@ public class Utils {
 				.getActiveNetworkInfo() != null;
 	}
 
-	public static boolean checkConnection(Context c) {
-		ConnectivityManager conMgr = (ConnectivityManager) c
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-		if (conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == android.net.NetworkInfo.State.CONNECTED
-				|| conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-						.getState() == NetworkInfo.State.CONNECTING) {
-			return true;
-
-		} else if (conMgr.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
-				|| conMgr.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
-			// notify user you are not online
-			return false;
-		} else
-			return false;
-	}
-
 	public static void notifyUserIfNotConnected(final Activity activity) {
 		// Check for Internet connection ---- Begin
 		Context context = activity.getApplicationContext();

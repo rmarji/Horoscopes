@@ -21,12 +21,14 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andapps.horoscopes.model.Horoscope;
 import com.andapps.horoscopes.utilis.Ads;
 import com.andapps.horoscopes.utilis.Analytics;
 import com.andapps.horoscopes.utilis.JSONParser;
 import com.andapps.horoscopes.utilis.ScrapeRanking;
+import com.andapps.horoscopes.utilis.Utils;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;
@@ -91,7 +93,7 @@ public class SingleHoroActivity extends Activity implements TabListener {
 		if (getIntent().getExtras() == null) {
 			hId = getSharedPreferences("pref", 0).getInt("hID", 1) - 1;
 
-			//TODO: check this to make sure its a ntoifcation thing
+			// TODO: check this to make sure its a ntoifcation thing
 			if (!getSharedPreferences("pref", 0).getBoolean("showPicker", true)) {
 				Calendar tempc = Calendar.getInstance();
 				tempc.setTimeInMillis(System.currentTimeMillis());
@@ -113,8 +115,16 @@ public class SingleHoroActivity extends Activity implements TabListener {
 
 		Analytics.horoViewed(Horoscope.NAMES[hId]);
 
-		// get the JSON objects from the link
-		new GetJson().execute();
+		if (Utils.isNetworkAvailable(getApplicationContext())) {
+			// get the JSON objects from the link
+			new GetJson().execute();
+		} else {
+			//TODO: add a refresh button
+			horoscopeET.setText("الرجاء التاكد من اتصالك بالانترنت");
+			Toast.makeText(getApplicationContext(),
+					"الرجاء التاكد من اتصالك بالانترنت", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 	}
 
@@ -156,9 +166,9 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			String url = URL + (hId + 1);
 			Log.d("URL", url);
 			JSONObject jsonObj = JSONParser.getJSONFromUrl(url);
-			ScrapeRanking.postToAGoogleDoc( new ArrayList<NameValuePair>());
+			ScrapeRanking.postToAGoogleDoc(new ArrayList<NameValuePair>());
 			return jsonObj;
-			
+
 		}
 
 		@Override
@@ -166,9 +176,8 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			super.onPostExecute(jsonObj);
 			// create the list to parse the json into
 			horoscopesObjs = new ArrayList<Horoscope>();
-			//TODO: activate this to start getting horoscopes
-			//ScrapeRanking.logRanking(getApplicationContext());
-			
+			// TODO: activate this to start getting horoscopes
+			// ScrapeRanking.logRanking(getApplicationContext());
 
 			try {
 				// get the array of objects

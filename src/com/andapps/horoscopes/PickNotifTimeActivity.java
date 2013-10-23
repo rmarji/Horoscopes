@@ -29,10 +29,13 @@ import android.widget.TimePicker;
 import com.andapps.horoscopes.model.Horoscope;
 import com.andapps.horoscopes.utilis.Alarm;
 import com.andapps.horoscopes.utilis.Analytics;
+
 /*
  * changelog
  * v 0.9
  * changed the default time to 10 from 7 based on analytics
+ * v 0.9.2
+ * 
  */
 
 @SuppressLint("NewApi")
@@ -163,6 +166,67 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 
 	}
 
+	public void showPopup(final Context mContext, final Editor editor) {
+
+		TimePickerDialog mTimePicker = new TimePickerDialog(
+				PickNotifTimeActivity.this,
+				new TimePickerDialog.OnTimeSetListener() {
+					@Override
+					public void onTimeSet(TimePicker timePicker,
+							int selectedHour, int selectedMinute) {
+
+						Analytics.timeChosen(
+								Integer.toString(mContext.getSharedPreferences(
+										"pref", 0).getInt("hID", -1)),
+								Integer.toString(selectedHour),
+								Integer.toString(selectedMinute));
+						// go to the single horoscope activty and show the saved
+						// horo
+						/************
+						 * this uses the startavtivites() function that add an
+						 * activity to the stack using the taskStackBuilder cls
+						 *****************/
+						TaskStackBuilder tsb = TaskStackBuilder
+								.create(getApplicationContext());
+						tsb.addNextIntentWithParentStack(
+								new Intent(getApplicationContext(),
+										MainMenuActivity.class)).addNextIntent(
+								new Intent(PickNotifTimeActivity.this,
+										SingleHoroActivity.class));
+						startActivities(tsb.getIntents());
+						/*******************/
+						Calendar tc = Calendar.getInstance();
+						tc.setTimeInMillis(System.currentTimeMillis());
+						// int year = tc.get(Calendar.YEAR);
+						// int month = tc.get(Calendar.MONTH);
+						// int day = tc.get(Calendar.DAY_OF_MONTH);
+
+						tc.set(Calendar.HOUR_OF_DAY, selectedHour);
+						tc.set(Calendar.MINUTE, selectedMinute);
+
+						// Toast.makeText(
+						// getApplicationContext(),
+						// "year " + year + " month : " + month
+						// + " day : " + day + "  hour : "
+						// + tc.get(Calendar.HOUR_OF_DAY)
+						// + " min : " + tc.get(Calendar.MINUTE),
+						// Toast.LENGTH_SHORT).show();
+						// tc.set(year, month, day, selectedHour,
+						// selectedMinute);
+
+						editor.putLong("notifTime", tc.getTimeInMillis());
+						editor.apply();
+
+						Alarm al = new Alarm();
+						al.SetAlarm(getApplicationContext(), tc);
+
+					}
+				}, 10, 0, false);// Yes 24 hour time
+		mTimePicker.setTitle("اختار الوقت المناسب للتنبيه اليومي");
+		mTimePicker.show();
+
+	}
+
 	int getHID(int month, int day) {
 		int hID = 0;
 
@@ -256,63 +320,4 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 		return hID;
 	}
 
-	public void showPopup(final Context mContext, final Editor editor) {
-
-		TimePickerDialog mTimePicker = new TimePickerDialog(
-				PickNotifTimeActivity.this,
-				new TimePickerDialog.OnTimeSetListener() {
-					@Override
-					public void onTimeSet(TimePicker timePicker,
-							int selectedHour, int selectedMinute) {
-
-						Analytics.timeChosen(
-								Integer.toString(mContext.getSharedPreferences(
-										"pref", 0).getInt("hID", -1)),
-								Integer.toString(selectedHour),
-								Integer.toString(selectedMinute));
-						// go to the single horoscope activty and show the saved
-						// horo
-						/************
-						 * this uses the startavtivites() function that add an
-						 * activity to the stack using the taskStackBuilder cls
-						 *****************/
-						TaskStackBuilder tsb = TaskStackBuilder
-								.create(getApplicationContext());
-						tsb.addNextIntentWithParentStack(
-								new Intent(getApplicationContext(),
-										MainMenuActivity.class)).addNextIntent(
-								new Intent(PickNotifTimeActivity.this,
-										SingleHoroActivity.class));
-						startActivities(tsb.getIntents());
-						/*******************/
-						Calendar tc = Calendar.getInstance();
-						tc.setTimeInMillis(System.currentTimeMillis());
-//						int year = tc.get(Calendar.YEAR);
-//						int month = tc.get(Calendar.MONTH);
-//						int day = tc.get(Calendar.DAY_OF_MONTH);
-
-						tc.set(Calendar.HOUR_OF_DAY, selectedHour);
-						tc.set(Calendar.MINUTE, selectedMinute);
-
-//						Toast.makeText(
-//								getApplicationContext(),
-//								"year " + year + " month : " + month
-//										+ " day : " + day + "  hour : "
-//										+ tc.get(Calendar.HOUR_OF_DAY)
-//										+ " min : " + tc.get(Calendar.MINUTE),
-//								Toast.LENGTH_SHORT).show();
-//						tc.set(year, month, day, selectedHour, selectedMinute);
-
-						editor.putLong("notifTime", tc.getTimeInMillis());
-						editor.apply();
-
-						Alarm al = new Alarm();
-						al.SetAlarm(getApplicationContext(), tc);
-
-					}
-				}, 10, 0, false);// Yes 24 hour time
-		mTimePicker.setTitle("اختار الوقت المناسب للتنبيه اليومي");
-		mTimePicker.show();
-
-	}
 }
