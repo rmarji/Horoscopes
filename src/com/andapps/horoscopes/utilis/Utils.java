@@ -152,13 +152,14 @@ public class Utils {
 	}
 
 	public static Intent getOpenTwitterIntent(Context context, String id) {
-		// TODO get twitter package name and do this just like the facebook
+		// TODO: get twitter package name and do this just like the facebook
 		// method
 		return new Intent(Intent.ACTION_VIEW,
 				Uri.parse("https://twitter.com/arabchattie"));
 	}
 
 	
+	// OBSELETE
 	public static String readTwitterFeed() {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();

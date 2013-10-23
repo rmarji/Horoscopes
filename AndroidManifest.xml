@@ -55,6 +55,13 @@
             android:name="com.andapps.horoscopes.utilis.Alarm"
             android:process=":remote" >
         </receiver>
+        
+        <receiver android:name="com.andapps.horoscopes.AlarmService" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.andapps.horoscopes.FeedbackActivity"

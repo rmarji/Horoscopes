@@ -10,9 +10,9 @@ public class AutoStart extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent)
     {   
-//        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
-//        {
-//            alarm.SetAlarm(context);
-//        }
+        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
+        {
+            alarm.SetAlarm(context);
+        }
     }
 }

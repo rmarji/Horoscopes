@@ -31,11 +31,11 @@ public class AlarmService extends Service
 
     public void onStart(Context context,Intent intent, int startId)
     {
-//    	 if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
-//         {
-//             alarm.SetAlarm(context);
-//         }
-//        alarm.SetAlarm(context);
+    	 if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
+         {
+             alarm.SetAlarm(context);
+         }
+        alarm.SetAlarm(context);
     }
 
     @Override
