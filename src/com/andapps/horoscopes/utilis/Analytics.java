@@ -121,8 +121,16 @@ public class Analytics {
 	public static void horoViewed(String horo) {
 		Map<String, String> arg1 = new HashMap<String, String>();
 		arg1.put("horo", horo);
-		FlurryAgent.logEvent("horo_viewed", arg1);
+		FlurryAgent.logEvent("horo_viewed", arg1 , true);
 	}
+	
+	public static void endHoroViewed(String prof, String love , String health) {
+		Map<String, String> arg1 = new HashMap<String, String>();
+		arg1.put("prof", prof);
+		arg1.put("love", love);
+		arg1.put("health", health);
+		FlurryAgent.endTimedEvent("horo_viewed",arg1);
+	}	
 	
 	public static void notifClicked(String horo , String dayOfTheWeek , String hour) {
 		Map<String, String> arg1 = new HashMap<String, String>();
@@ -133,6 +141,22 @@ public class Analytics {
 	}
 
 	public static void timeChosen(String horo , String hour , String min) {
+		Map<String, String> arg1 = new HashMap<String, String>();
+		arg1.put("horo", horo);
+		arg1.put("hour_of_the_day", hour);
+		arg1.put("min_of_the_hour", min);
+		FlurryAgent.logEvent("time_chosen", arg1);
+	}
+	
+	public static void startWizard(String horo , String hour , String min) {
+		Map<String, String> arg1 = new HashMap<String, String>();
+		arg1.put("horo", horo);
+		arg1.put("hour_of_the_day", hour);
+		arg1.put("min_of_the_hour", min);
+		FlurryAgent.logEvent("time_chosen", arg1);
+	}
+	
+	public static void endWizard(String horo , String hour , String min) {
 		Map<String, String> arg1 = new HashMap<String, String>();
 		arg1.put("horo", horo);
 		arg1.put("hour_of_the_day", hour);
