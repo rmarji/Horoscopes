@@ -79,6 +79,25 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="35dp" >
             </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/aries"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/imageButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/horscope_text"
+                android:src="@android:drawable/ic_menu_share" />
+
         </RelativeLayout>
     </LinearLayout>
 

@@ -1,31 +1,23 @@
 package com.andapps.horoscopes;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import com.andapps.horoscopes.model.Horoscope;
+import com.andapps.horoscopes.model.ImageAdapter;
 import com.andapps.horoscopes.utilis.Analytics;
-import com.andapps.horoscopes.utilis.ImageAdapter;
 
-@SuppressLint("SetJavaScriptEnabled")
+
 public class MainMenuActivity extends Activity implements
 		OnMenuItemClickListener {
 
@@ -98,7 +90,9 @@ public class MainMenuActivity extends Activity implements
 						SingleHoroActivity.class);
 				// Passing array index
 				i.putExtra("id", pos);
+				//overridePendingTransition(R.anim.zoom_in, R.anim.bounce);
 				startActivity(i);
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 			}
 		});
 	}
@@ -126,6 +120,15 @@ public class MainMenuActivity extends Activity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_menu, menu);
 		menu.findItem(R.id.rate_main).setIcon(R.drawable.ic_menu_rate);
+		menu.findItem(R.id.rate_main).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("market://details?id=com.andapps.horoscopes")));
+				return false;
+			}
+		});
 
 		return true;
 
@@ -135,6 +138,12 @@ public class MainMenuActivity extends Activity implements
 	public boolean onMenuItemClick(MenuItem item) {
 
 		return false;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 }

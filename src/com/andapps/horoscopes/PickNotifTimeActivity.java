@@ -1,10 +1,12 @@
 package com.andapps.horoscopes;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,14 +30,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.andapps.horoscopes.model.Horoscope;
-import com.andapps.horoscopes.utilis.Alarm;
 import com.andapps.horoscopes.utilis.Analytics;
+import com.andapps.horoscopes.utilis.Alarm.Alarm;
 
 /*
- * changelog
+ * Change Log
+ * -----------------
+ * v 0.9.2
+ * remove time picker and just add it as a setting thing.
+ * 
  * v 0.9
  * changed the default time to 10 from 7 based on analytics
- * v 0.9.2
  * 
  */
 
@@ -80,7 +86,25 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 		dp = (DatePicker) findViewById(R.id.datePicker1);
 		dp.setOnClickListener(this);
 
-		dp.updateDate(1990, 10, 2);
+		long dob = getSharedPreferences("pref",0).getLong("dob", 0);
+		if (dob != 0)
+		{
+			Calendar tcc = Calendar.getInstance();
+			tcc.setTimeInMillis(dob);
+			
+			int tyear = tcc.get(Calendar.YEAR);
+			int tmonth = tcc.get(Calendar.MONTH);
+			int tday = tcc.get(Calendar.DAY_OF_MONTH);
+			dp.updateDate(tyear , tmonth , tday);
+			
+			int hid = getHID(tmonth + 1, tday);
+
+			iv.setImageResource(Horoscope.mThumbIds[hid - 1]);
+			hLabel.setText(Horoscope.NAMES[hid - 1]);
+		}
+		else
+			dp.updateDate(1990, 10, 2);
+		
 
 		dp.setMaxDate(System.currentTimeMillis());
 		dp.getCalendarView().setOnDateChangeListener(
@@ -115,12 +139,6 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 	// "21/5-21/6", "22/6-22/7", "23/7-23/8", "24/8-23/9",
 	// "24/9-23/10", "24/10-22/11", "23/11-21/12", "22/12-20/1",
 	// "21/1-19/2", "20/2-20/3" };
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.pick_notif_time, menu);
-		return true;
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -154,15 +172,47 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 
 			editor.putLong("dob", dobMS);
 			editor.putInt("hID", hID);
-			editor.putBoolean("showPicker", false);
+			editor.putBoolean("show_picker", false);
 
 			editor.apply();
 
-			showPopup(getApplicationContext(), sp.edit());
+			// showPopup(getApplicationContext(), sp.edit());
+
+			Calendar tc = Calendar.getInstance();
+			tc.setTimeInMillis(Alarm.getSameDayAt(System.currentTimeMillis(),
+					8, 45) + AlarmManager.INTERVAL_DAY);
+
+			java.text.DateFormat df = SimpleDateFormat.getDateTimeInstance();
+			Log.d("date", df.format(tc.getTime()));
+
+			Alarm al = new Alarm();
+			al.SetAlarm(getApplicationContext(), tc);
+
+			goToSingleHoro();
+
 			break;
 		default:
 			break;
 		}
+
+	}
+
+	private void goToSingleHoro() {
+		// go to the single horoscope activty and show the saved
+		// horo
+		/************
+		 * this uses the startavtivites() function that add an activity to the
+		 * stack using the taskStackBuilder cls
+		 *****************/
+		TaskStackBuilder tsb = TaskStackBuilder.create(getApplicationContext());
+		tsb.addNextIntentWithParentStack(
+				new Intent(getApplicationContext(), MainMenuActivity.class))
+				.addNextIntent(
+						new Intent(PickNotifTimeActivity.this,
+								SingleHoroActivity.class));
+		startActivities(tsb.getIntents());
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		/*******************/
 
 	}
 
@@ -180,21 +230,7 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 										"pref", 0).getInt("hID", -1)),
 								Integer.toString(selectedHour),
 								Integer.toString(selectedMinute));
-						// go to the single horoscope activty and show the saved
-						// horo
-						/************
-						 * this uses the startavtivites() function that add an
-						 * activity to the stack using the taskStackBuilder cls
-						 *****************/
-						TaskStackBuilder tsb = TaskStackBuilder
-								.create(getApplicationContext());
-						tsb.addNextIntentWithParentStack(
-								new Intent(getApplicationContext(),
-										MainMenuActivity.class)).addNextIntent(
-								new Intent(PickNotifTimeActivity.this,
-										SingleHoroActivity.class));
-						startActivities(tsb.getIntents());
-						/*******************/
+
 						Calendar tc = Calendar.getInstance();
 						tc.setTimeInMillis(System.currentTimeMillis());
 						// int year = tc.get(Calendar.YEAR);
@@ -320,4 +356,9 @@ public class PickNotifTimeActivity extends Activity implements OnClickListener {
 		return hID;
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
 }

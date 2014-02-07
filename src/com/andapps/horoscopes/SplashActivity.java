@@ -39,16 +39,19 @@ public class SplashActivity extends Activity {
 	}
 
 	public void showMain() {
-		if (getSharedPreferences("pref", 0).getBoolean("showPicker", true))
+		if (getSharedPreferences("pref", 0).getBoolean("show_picker", true))
 		{
 			startActivity(new Intent(SplashActivity.this,
 					PickNotifTimeActivity.class));
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
 		else
 		{
 			startActivity(new Intent(SplashActivity.this,
 					MainMenuActivity.class));
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
+		
 //	startActivity(new Intent(SplashActivity.this,
 //			PickNotifTimeActivity.class));
 		finish();
@@ -64,5 +67,10 @@ public class SplashActivity extends Activity {
 	protected void onStop() {
 		super.onStop();
 		Analytics.endSession(this);
+	}
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 }

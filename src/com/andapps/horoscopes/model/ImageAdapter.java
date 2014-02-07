@@ -1,7 +1,9 @@
-package com.andapps.horoscopes.utilis;
+package com.andapps.horoscopes.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ public class ImageAdapter extends BaseAdapter {
 	private Context context;
 	public int[] mThumbIds;
 	public String[] names;
+	Typeface tf ;
 
 	// Constructor
 	public ImageAdapter(Context c, int[] mThumbIds, String[] names) {
@@ -35,11 +38,12 @@ public class ImageAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 
+		tf = Typeface.createFromAsset(context.getAssets(),"fonts/DroidSansArabic.ttf");
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -61,8 +65,15 @@ public class ImageAdapter extends BaseAdapter {
 
 			//set the names and images based on their positions
 			imageView.setImageResource(mThumbIds[position]);
+			textView.setTypeface(tf);
 			textView.setText(names[position]);
 			textView.setTextColor(Color.WHITE);
+			SharedPreferences sp = context.getSharedPreferences("pref",0);
+			if (sp.getInt("hID", 0) == position+1)
+			{
+				textView.setTextColor(Color.rgb(255,255,102));
+				textView.setTextSize(textView.getTextSize()+0.35f);
+			}
 
 			
 

@@ -2,6 +2,8 @@ package com.andapps.horoscopes;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -13,13 +15,25 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +72,11 @@ public class SingleHoroActivity extends Activity implements TabListener {
 
 	// UI
 	ImageView hImg;
+	ImageView hImg2;
 	TextView hDate, hName, horoscopeET;
+	View view;
+
+	Typeface tf1, tf2, tf3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +85,20 @@ public class SingleHoroActivity extends Activity implements TabListener {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_single_horo);
+		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		/** admob ****/
 		AdView adView = new AdView(this, AdSize.SMART_BANNER, Ads.ADMOB_UNIT_ID);
+		AdRequest req = new AdRequest();
+
+		req.setBirthday(new Date(getSharedPreferences("pref", 0).getLong("dob",
+				0)));
+		
+		req.addKeyword("ابراج");
+		req.addKeyword("horoscope");
+		req.addKeyword("Australia");
+		req.addKeyword("Forex");		
 
 		// Lookup your LinearLayout assuming it's been given
 		// the attribute android:id="@+id/mainLayout"
@@ -78,7 +108,7 @@ public class SingleHoroActivity extends Activity implements TabListener {
 		layout.addView(adView);
 
 		// Initiate a generic request to load it with an ad
-		adView.loadAd(new AdRequest());
+		adView.loadAd(req);
 		/**** end admob ***/
 
 		// TODO: change the min to 8 again by adding Sherlok
@@ -89,12 +119,20 @@ public class SingleHoroActivity extends Activity implements TabListener {
 		hDate = (TextView) findViewById(R.id.hdate);
 		hName = (TextView) findViewById(R.id.hname);
 		horoscopeET = (TextView) findViewById(R.id.horscope_text);
+		hImg2 = (ImageView) findViewById(R.id.ImageView01);
+		ImageButton ib = (ImageButton) findViewById(R.id.imageButton1);
+
+		tf1 = Typeface
+				.createFromAsset(getAssets(), "fonts/DroidSansArabic.ttf");
+		tf2 = Typeface.createFromAsset(getAssets(),
+				"fonts/DroidKufi-Regular.ttf");
+		tf3 = Typeface.createFromAsset(getAssets(), "fonts/Damascus.ttc");
 		/**********************/
 		if (getIntent().getExtras() == null) {
 			hId = getSharedPreferences("pref", 0).getInt("hID", 1) - 1;
 
 			// TODO: check this to make sure its a ntoifcation thing
-			if (!getSharedPreferences("pref", 0).getBoolean("showPicker", true)) {
+			if (!getSharedPreferences("pref", 0).getBoolean("show_picker", true)) {
 				Calendar tempc = Calendar.getInstance();
 				tempc.setTimeInMillis(System.currentTimeMillis());
 				Analytics.notifClicked(Integer.toString(hId),
@@ -106,12 +144,15 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			hId = getIntent().getExtras().getInt("id");
 		}
 
-		// TODO: bullet proof the above maybe by figuiring out how to add an
-		// extr on the notif intent
+		// TODO: bullet proof the above maybe by figuring out how to add an
+		// extra on the notif intent
 
 		hImg.setImageResource(mThumbIds[hId]);
+		hImg2.setImageResource(mThumbIds[hId]);
 		hDate.setText(dates[hId]);
 		hName.setText(names[hId]);
+		hDate.setTypeface(tf1);
+		hName.setTypeface(tf1);
 
 		Analytics.horoViewed(Horoscope.NAMES[hId]);
 
@@ -119,13 +160,23 @@ public class SingleHoroActivity extends Activity implements TabListener {
 			// get the JSON objects from the link
 			new GetJson().execute();
 		} else {
-			//TODO: add a refresh button
+			// TODO: add a refresh button
 			horoscopeET.setText("الرجاء التاكد من اتصالك بالانترنت");
 			Toast.makeText(getApplicationContext(),
 					"الرجاء التاكد من اتصالك بالانترنت", Toast.LENGTH_SHORT)
 					.show();
 		}
 
+		ib.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_SEND);
+				intent.setType("text/plain");
+				intent.putExtra(Intent.EXTRA_TEXT, hName.getText() + ": "
+						+ horoscopeET.getText() + " http://goo.gl/AO5gZJ");
+				startActivity(Intent.createChooser(intent, "انشر برجك"));
+			}
+		});
 	}
 
 	@Override
@@ -217,7 +268,11 @@ public class SingleHoroActivity extends Activity implements TabListener {
 					// ListView lv = (ListView) findViewById(R.id.listView1);
 					// lv.setAdapter(adapter);
 
+					horoscopeET.setAnimation(AnimationUtils.loadAnimation(
+							getApplicationContext(), R.anim.fade_in));
 					horoscopeET.setText(horoscopesObjs.get(0).getSingle());
+					horoscopeET.setTypeface(tf3);
+					horoscopeET.setTextSize(horoscopeET.getTextSize() * 1.1f);
 
 				}
 			});
@@ -229,6 +284,14 @@ public class SingleHoroActivity extends Activity implements TabListener {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.single, menu);
 		menu.findItem(R.id.rate).setIcon(R.drawable.ic_menu_rate);
+		menu.findItem(R.id.rate).setOnMenuItemClickListener(new OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+						.parse("market://details?id=com.andapps.horoscopes")));
+				return false;
+			}
+		});
 		return true;
 	}
 
@@ -241,20 +304,59 @@ public class SingleHoroActivity extends Activity implements TabListener {
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction arg1) {
+		// LayoutInflater inflater = (LayoutInflater) getApplicationContext()
+		// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// RelativeLayout rl = (RelativeLayout)
+		// inflater.inflate(R.layout.main_menu_item, null);
+		//
+		// TextView text = (TextView) rl.findViewById(R.id.label);
+		// ImageView img = (ImageView) rl.findViewById(R.id.grid_item_image);
+		//
+		// // text.setText("مهنيا");
+		// img.setImageResource(Horoscope.mThumbIds[hId]);
+		//
+		view = tab.getCustomView();
+
+		tab.setCustomView(hImg2);
+
 		if (horoscopesObjs != null) {
 			TextView tv = (TextView) findViewById(R.id.horscope_text);
 			if (tab.getText().toString().equals("مهنيا")) {
+
+				tv.setAnimation(AnimationUtils.loadAnimation(
+						getApplicationContext(), R.anim.fade_in));
 				tv.setText(horoscopesObjs.get(0).getSingle());
-			} else if (tab.getText().toString().equals("عاطفيا"))
+				tv.setTypeface(tf3);
+
+			} else if (tab.getText().toString().equals("عاطفيا")) {
+				tv.setAnimation(AnimationUtils.loadAnimation(
+						getApplicationContext(), R.anim.fade_in));
 				tv.setText(horoscopesObjs.get(0).getDaily());
-			else if (tab.getText().toString().equals("صحياَ"))
+				tv.setTypeface(tf3);
+			} else if (tab.getText().toString().equals("صحياَ")) {
 				tv.setText(horoscopesObjs.get(0).getCouple());
+				tv.setAnimation(AnimationUtils.loadAnimation(
+						getApplicationContext(), R.anim.fade_in));
+				tv.setTypeface(tf3);
+			}
 		}
 	}
 
 	@Override
-	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-
+	public void onTabUnselected(Tab tab, FragmentTransaction arg1) {
+		tab.setCustomView(view);
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+	
+	 @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		 if (item.getItemId() == android.R.id.home)
+			 onBackPressed();
+		 return super.onOptionsItemSelected(item);
+	}
 }

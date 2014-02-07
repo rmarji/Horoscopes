@@ -1,3 +1,4 @@
+package com.andapps.horoscopes.utilis.gamification;
 //package com.andapps.horoscopes;
 //import java.util.ArrayList;
 //import java.util.List;
