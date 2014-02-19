@@ -38,11 +38,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andapps.horoscopes.model.Horoscope;
-import com.andapps.horoscopes.utilis.Ads;
-import com.andapps.horoscopes.utilis.Analytics;
-import com.andapps.horoscopes.utilis.JSONParser;
-import com.andapps.horoscopes.utilis.ScrapeRanking;
-import com.andapps.horoscopes.utilis.Utils;
+import com.andapps.horoscopes.utilisz.Ads;
+import com.andapps.horoscopes.utilisz.Analytics;
+import com.andapps.horoscopes.utilisz.JSONParser;
+import com.andapps.horoscopes.utilisz.ScrapeRanking;
+import com.andapps.horoscopes.utilisz.Utils;
 import com.google.ads.AdRequest;
 import com.google.ads.AdSize;
 import com.google.ads.AdView;

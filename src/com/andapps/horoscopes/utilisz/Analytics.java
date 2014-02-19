@@ -1,4 +1,4 @@
-package com.andapps.horoscopes.utilis;
+package com.andapps.horoscopes.utilisz;
 
 import java.util.Calendar;
 import java.util.HashMap;

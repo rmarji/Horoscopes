@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.andapps.horoscopes.SingleHoroActivity;
 import com.andapps.horoscopes.model.Horoscope;
-import com.andapps.horoscopes.utilis.Notifications;
+import com.andapps.horoscopes.utilisz.Notifications;
 
 //TODO: check what the hell is this for the suppress lint wakelook
 //TODO: document how to do this appropriately

@@ -1,6 +1,6 @@
 package com.andapps.horoscopes.utilis.gamification;
 
-import com.andapps.horoscopes.utilis.Analytics;
+import com.andapps.horoscopes.utilisz.Analytics;
 
 import android.app.Dialog;
 import android.content.Context;

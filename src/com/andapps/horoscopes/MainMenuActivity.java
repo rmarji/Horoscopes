@@ -15,7 +15,7 @@ import android.widget.GridView;
 
 import com.andapps.horoscopes.model.Horoscope;
 import com.andapps.horoscopes.model.ImageAdapter;
-import com.andapps.horoscopes.utilis.Analytics;
+import com.andapps.horoscopes.utilisz.Analytics;
 
 
 public class MainMenuActivity extends Activity implements

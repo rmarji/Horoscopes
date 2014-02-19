@@ -1,4 +1,4 @@
-package com.andapps.horoscopes.utilis;
+package com.andapps.horoscopes.utilisz;
 
 import java.io.BufferedReader;
 import java.io.IOException;

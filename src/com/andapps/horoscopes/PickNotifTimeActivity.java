@@ -30,8 +30,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.andapps.horoscopes.model.Horoscope;
-import com.andapps.horoscopes.utilis.Analytics;
 import com.andapps.horoscopes.utilis.Alarm.Alarm;
+import com.andapps.horoscopes.utilisz.Analytics;
 
 /*
  * Change Log

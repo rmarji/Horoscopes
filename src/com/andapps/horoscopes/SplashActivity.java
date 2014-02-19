@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.andapps.horoscopes.utilis.Analytics;
+import com.andapps.horoscopes.utilisz.Analytics;
 
 public class SplashActivity extends Activity {
 
